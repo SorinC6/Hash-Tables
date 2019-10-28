@@ -51,11 +51,17 @@ class HashTable:
 
         Fill this in.
         '''
+        # index = self._hash_mod(key)
+        # if self.storage[index] is not None:
+        #     print("Error/Warning INSERT")
+        #     return
+        # self.storage[index] = LinkedPair(key, value)
+
         index = self._hash_mod(key)
-        if self.storage[index] is not None:
-            print("Error: index collision")
-            return
-        self.storage[index] = LinkedPair(key, value)
+        node = LinkedPair(key, value)
+        # whatever there is  in the bucket right now
+        node.next = self.storage[index]
+        self.storage[index] = node
 
     def remove(self, key):
         '''
@@ -68,7 +74,7 @@ class HashTable:
         index = self._hash_mod(key)
 
         if self.storage[index] is None:
-            print("Error/Warning: Not found")
+            print("Error/Warning: REMOVE")
             return
         self.storage[index] = None
 
@@ -80,13 +86,23 @@ class HashTable:
 
         Fill this in.
         '''
-        index = self._hash_mod(key)
+        # index = self._hash_mod(key)
 
-        pair = self.storage[index]
-        if pair is None:
-            return None
-        else:
-            return self.storage[index].value
+        # pair = self.storage[index]
+        # if pair is None:
+        #     return None
+        # else:
+        #     return self.storage[index].value
+
+        index = self._hash_mod(key)
+        head = self.storage[index]
+
+        while head:
+            if head.key == key:
+                return head.value
+            head = head.next
+
+        return None
 
     def resize(self):
         '''
@@ -95,14 +111,8 @@ class HashTable:
 
         Fill this in.
         '''
-        self.capacity += 2
-        newStorage = [None] * self.capacity
-
-        for pair in self.storage:
-            if pair is not None:
-                newIndex = self._hash_mod(pair.key)
-                newStorage[newIndex] = pair
-        self.storage = newStorage
+        for i in range(self.capacity):
+            self.storage.append(None)
 
 
 if __name__ == "__main__":
@@ -118,9 +128,6 @@ if __name__ == "__main__":
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
-
-    # ht.remove("line_3")
-    # ht.remove("line_3")
 
     # Test resizing
     old_capacity = len(ht.storage)
