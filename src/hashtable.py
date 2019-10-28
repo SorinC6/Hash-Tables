@@ -55,7 +55,7 @@ class HashTable:
         if self.storage[index] is not None:
             print("Error: index collision")
             return
-        self.storage[index] = value
+        self.storage[index] = LinkedPair(key, value)
 
     def remove(self, key):
         '''
@@ -81,7 +81,12 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        return self.storage[index]
+
+        pair = self.storage[index]
+        if pair is None:
+            return None
+        else:
+            return self.storage[index].value
 
     def resize(self):
         '''
@@ -90,7 +95,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity += 2
+        newStorage = [None] * self.capacity
+
+        for pair in self.storage:
+            if pair is not None:
+                newIndex = self._hash_mod(pair.key)
+                newStorage[newIndex] = pair
+        self.storage = newStorage
 
 
 if __name__ == "__main__":
