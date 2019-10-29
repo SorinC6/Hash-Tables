@@ -71,12 +71,32 @@ class HashTable:
 
         Fill this in.
         '''
-        index = self._hash_mod(key)
+        # index = self._hash_mod(key)
 
-        if self.storage[index] is None:
-            print("Error/Warning: REMOVE")
+        # if self.storage[index] is None:
+        #     print("Error/Warning: REMOVE")
+        #     return
+        # self.storage[index] = None
+
+        bucket = self._hash_mod(key)
+        if self.storage[bucket] is None:
             return
-        self.storage[index] = None
+
+        head = self.storage[bucket]
+        if head.key == key:
+            self.storage[bucket] = head.next
+            return
+
+        current = self.storage[bucket]
+        previous = head
+        while current:
+            if current.key == key:
+                previous.next = current.next
+                return
+
+            else:
+                previous = current
+                current = current.next
 
     def retrieve(self, key):
         '''
